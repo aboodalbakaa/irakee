@@ -1,0 +1,184 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── NextAuth.js required models ───
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ─── Irakee Application Models ───
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  username      String?   @unique
+  role          String    @default("user") // "user" | "admin" | "moderator"
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  accounts  Account[]
+  sessions  Session[]
+  profile   Profile?
+  events    Event[]          @relation("OrganizedEvents")
+  reviews   Review[]         @relation("Reviewer")
+  received  Review[]         @relation("ReviewTarget")
+  purchases Transaction[]   @relation("Buyer")
+  sales     Transaction[]   @relation("Seller")
+
+  @@map("users")
+}
+
+model Profile {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  displayName        String?  @map("display_name")
+  bio                String?  @db.Text
+  profession         String?
+  industry           String?
+  city               String?
+  country            String?
+  languages          String[] @default([])
+  diasporaStatus     String?  @default("first_gen") @map("diaspora_status") // "first_gen" | "second_gen" | "friend_of_iraq"
+  verificationStatus String   @default("unverified") @map("verification_status") // "unverified" | "verified" | "premium"
+  phone              String?
+  avatarUrl          String?  @map("avatar_url")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listings Listing[]
+
+  @@map("profiles")
+}
+
+model Listing {
+  id          String   @id @default(cuid())
+  profileId   String   @map("profile_id")
+  listingType String   @map("listing_type") // "professional" | "service" | "housing" | "goods" | "opportunity"
+  titleEn     String   @map("title_en")
+  titleAr     String?  @map("title_ar")
+  descriptionEn String? @map("description_en") @db.Text
+  descriptionAr String? @map("description_ar") @db.Text
+  category    String?
+  subcategory String?
+  city        String?
+  country     String?
+  priceMin    Float?   @map("price_min")
+  priceMax    Float?   @map("price_max")
+  currency    String?  @default("USD")
+  tags        String[] @default([])
+  media       String[] @default([])
+  status      String   @default("active") // "active" | "paused" | "archived"
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  profile     Profile      @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+  reviews     Review[]
+
+  @@map("listings")
+}
+
+model Event {
+  id           String   @id @default(cuid())
+  organizerId  String   @map("organizer_id")
+  titleEn      String   @map("title_en")
+  titleAr      String?  @map("title_ar")
+  descriptionEn String? @map("description_en") @db.Text
+  descriptionAr String? @map("description_ar") @db.Text
+  eventType    String   @map("event_type") // "online" | "in_person" | "hybrid"
+  location     String?
+  startTime    DateTime @map("start_time")
+  endTime      DateTime @map("end_time")
+  timezone     String?
+  maxAttendees Int?     @map("max_attendees")
+  coverImage   String?  @map("cover_image")
+  tags         String[] @default([])
+  status       String   @default("draft") // "draft" | "published" | "cancelled" | "completed"
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  organizer User @relation("OrganizedEvents", fields: [organizerId], references: [id], onDelete: Cascade)
+
+  @@map("events")
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  reviewerId String   @map("reviewer_id")
+  targetId   String   @map("target_id")
+  listingId  String?  @map("listing_id")
+  rating     Int
+  content    String?  @db.Text
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  reviewer User  @relation("Reviewer", fields: [reviewerId], references: [id], onDelete: Cascade)
+  target   User  @relation("ReviewTarget", fields: [targetId], references: [id], onDelete: Cascade)
+  listing  Listing? @relation(fields: [listingId], references: [id], onDelete: SetNull)
+
+  @@map("reviews")
+}
+
+model Transaction {
+  id               String   @id @default(cuid())
+  listingId        String   @map("listing_id")
+  buyerId          String   @map("buyer_id")
+  sellerId         String   @map("seller_id")
+  amount           Float
+  currency         String   @default("USD")
+  status           String   @default("pending") // "pending" | "escrow" | "completed" | "disputed"
+  escrowReleaseDate DateTime? @map("escrow_release_date")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  buyer   User    @relation("Buyer", fields: [buyerId], references: [id], onDelete: Cascade)
+  seller  User    @relation("Seller", fields: [sellerId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
+}

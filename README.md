@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Irakee — Iraqi Diaspora Platform
 
-## Getting Started
+A non-profit platform connecting the Iraqi diaspora worldwide. Directory, marketplace, events, and mediation — built with Next.js 16, Supabase, and internationalization (EN/AR + RTL support).
 
-First, run the development server:
+## 🚀 Quick Start
 
 ```bash
+# Clone and install
+git clone <your-repo-url> irakee
+cd irakee
+npm install
+
+# Set up environment
+cp .env.example .env.local
+
+# Run the Supabase migration
+npx supabase migration up
+
+# Start development
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🏗️ Architecture
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | Next.js 16 (App Router, Server Components) |
+| **Backend** | Next.js API Routes + Supabase |
+| **Database** | Supabase PostgreSQL (RLS-enabled) |
+| **Auth** | Supabase Auth (Google OAuth + Email) |
+| **i18n** | next-intl (EN/AR, RTL support) |
+| **Deploy** | Vercel (recommended) |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 Project Structure
 
-## Learn More
+```
+src/app/[locale]/
+├── page.tsx           ← Home (hero, search, featured profiles, stats)
+├── directory/page.tsx ← Searchable + filterable directory
+├── profile/[id]/page.tsx ← Full profile with reviews
+├── about/page.tsx     ← Mission, vision, CIC structure
+├── auth/page.tsx      ← Google OAuth + email sign in
+├── layout.tsx         ← RTL-aware, i18n provider
+├── loading.tsx        ← Spinner skeleton
+└── error.tsx          ← Error boundary with retry
 
-To learn more about Next.js, take a look at the following resources:
+src/components/
+├── layout/ (Header, Navbar, Footer)
+└── ui/ (Button, Card, Badge, Input, SearchBar, ProfileCard, LanguageSwitcher)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+supabase/migrations/   ← Full schema with RLS + FTS (EN+AR)
+messages/              ← en.json + ar.json (all strings translated)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🗺️ Roadmap
 
-## Deploy on Vercel
+- **Phase 1** (4 weeks): Instagram presence + simple web directory
+- **Phase 2** (+6 weeks): Full platform (profiles, advanced search, events)
+- **Phase 3** (+12 weeks): Mediation, escrow, verification system
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🧩 Key Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Directory**: Searchable diaspora member directory with filters
+- **Profiles**: Member profiles with reviews and ratings
+- **Auth**: Google OAuth + email/password sign-in
+- **i18n**: Full English/Arabic with RTL layout
+- **SEO**: generateMetadata on all pages
+- **Accessibility**: Proper aria-labels, semantic HTML
+
+## 🤝 Contributing
+
+This is a non-profit community project. Contributions welcome — especially from Iraqi diaspora members, developers, and community organizers.
+
+## 📦 Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/aboodalbakaa/irakee)
+
+Required environment variables:
+- `NEXT_PUBLIC_SUPABASE_URL` — your Supabase project URL
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — your Supabase anon/public key
+
+## 📄 License
+
+Non-profit / Community Interest Company (CIC) — see [about page](https://irakee.app/about) for details.
