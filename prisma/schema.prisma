@@ -51,15 +51,16 @@ model VerificationToken {
 // ─── Iraqee Application Models ───
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  username      String?   @unique
-  role          String    @default("user") // "user" | "admin" | "moderator"
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  username       String?   @unique
+  role           String    @default("user") // "user" | "admin" | "moderator"
+  hashedPassword String?   @map("hashed_password")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
 
   // Relations
   accounts  Account[]
@@ -158,10 +159,11 @@ model Review {
   content    String?  @db.Text
   createdAt  DateTime @default(now()) @map("created_at")
 
-  reviewer User  @relation("Reviewer", fields: [reviewerId], references: [id], onDelete: Cascade)
-  target   User  @relation("ReviewTarget", fields: [targetId], references: [id], onDelete: Cascade)
+  reviewer User     @relation("Reviewer", fields: [reviewerId], references: [id], onDelete: Cascade)
+  target   User     @relation("ReviewTarget", fields: [targetId], references: [id], onDelete: Cascade)
   listing  Listing? @relation(fields: [listingId], references: [id], onDelete: SetNull)
 
+  @@unique([reviewerId, targetId, listingId])
   @@map("reviews")
 }
 

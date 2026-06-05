@@ -1,10 +1,10 @@
-import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
-import { Search, Users, Globe, FileText, ArrowRight, ArrowLeft, Star, Handshake } from "lucide-react";
+import { Users, Globe, FileText, ArrowRight, ArrowLeft, Star, Handshake } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { ProfileCard } from "@/components/ui/ProfileCard";
+import { HeroSearch } from "@/components/ui/HeroSearch";
 import { prisma } from "@/lib/db";
 
 type Props = {
@@ -45,25 +45,35 @@ export default async function HomePage({ params }: Props) {
   const navT = await getTranslations({ locale, namespace: "nav" });
 
   // Fetch featured profiles from database, fall back to placeholder
-  let featuredProfiles: any;
+  type ProfileRow = {
+    id: string;
+    displayName: string | null;
+    profession: string | null;
+    city: string | null;
+    country: string | null;
+    languages: string[];
+    user: { name: string | null };
+  };
+
+  let featuredProfiles: ProfileRow[] = [];
   try {
-    featuredProfiles = await prisma.profile.findMany({
+    featuredProfiles = (await prisma.profile.findMany({
       take: 6,
       orderBy: { createdAt: "desc" },
       include: { user: { select: { name: true } } },
-    });
-  } catch {
-    featuredProfiles = [];
+    })) as ProfileRow[];
+  } catch (err) {
+    console.error("[home] db error:", err);
   }
 
   const profiles =
     featuredProfiles.length > 0
-      ? featuredProfiles.map((p: any) => ({
+      ? featuredProfiles.map((p) => ({
           id: p.id,
-          name: p.displayName || p.user?.name || "Anonymous",
-          profession: p.profession || "",
-          city: p.city || "",
-          country: p.country || "",
+          name: p.displayName ?? p.user?.name ?? "Anonymous",
+          profession: p.profession ?? "",
+          city: p.city ?? "",
+          country: p.country ?? "",
           languages: p.languages,
         }))
       : FEATURED_PROFILES;
@@ -96,16 +106,7 @@ export default async function HomePage({ params }: Props) {
             </p>
 
             {/* Search */}
-            <div className="mx-auto mt-10 max-w-xl">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-iraq-gold/60" />
-                <input
-                  type="text"
-                  placeholder={t("searchPlaceholder")}
-                  className="h-14 w-full rounded-xl border border-iraq-gold/20 bg-iraq-navy-light/80 pl-12 pr-4 text-base text-white placeholder:text-iraq-cream/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-iraq-gold focus:border-iraq-gold"
-                />
-              </div>
-            </div>
+            <HeroSearch />
 
             {/* CTAs */}
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
