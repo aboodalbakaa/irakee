@@ -43,7 +43,7 @@ export default async function DirectoryPage({ params, searchParams }: Props) {
   const currentPage = sp.page ? Math.max(1, parseInt(sp.page, 10)) : 1;
   const skip = (currentPage - 1) * ITEMS_PER_PAGE;
 
-  const where: Parameters<typeof prisma.profile.findMany>[0]["where"] = {};
+  const where: Record<string, unknown> = {};
   if (sp.profession) where.profession = sp.profession;
   if (sp.city) where.city = { contains: sp.city, mode: "insensitive" };
   if (sp.country) where.country = { contains: sp.country, mode: "insensitive" };
