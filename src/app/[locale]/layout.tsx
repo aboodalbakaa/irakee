@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "home" });
 
   return {
-    title: "Irakee — Your Iraqi community worldwide",
+    title: "Iraqee — Your Iraqi community worldwide",
     description: t("heroSubtitle"),
     icons: {
       icon: "/favicon.ico",

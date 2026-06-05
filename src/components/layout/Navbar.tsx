@@ -37,7 +37,7 @@ export function Navbar() {
             I
           </div>
           <span className="text-xl font-bold tracking-tight text-iraq-navy">
-            Irakee
+            Iraqee
           </span>
         </Link>
 

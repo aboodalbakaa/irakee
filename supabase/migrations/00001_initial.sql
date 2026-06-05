@@ -1,4 +1,4 @@
--- Irakee Platform — Initial Schema
+-- Iraqee Platform — Initial Schema
 -- Extends Supabase auth.users for profiles, directory listings, events, and reviews
 
 -- 1. PROFILES (extends auth.users)

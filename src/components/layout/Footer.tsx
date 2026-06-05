@@ -21,7 +21,7 @@ export function Footer() {
                 I
               </div>
               <span className="text-lg font-bold text-iraq-gold">
-                Irakee
+                Iraqee
               </span>
             </Link>
             <p className="mt-3 text-sm text-iraq-cream/60">

@@ -13,7 +13,7 @@
     "heroTitle": "Your Iraqi community worldwide",
     "heroSubtitle": "Connect with Iraqi professionals, discover services, and find your community — wherever you are.",
     "searchPlaceholder": "Search by name, profession, or city...",
-    "joinCta": "Join Irakee",
+    "joinCta": "Join Iraqee",
     "browseCta": "Browse Directory",
     "statsMembers": "8M+",
     "statsMembersLabel": "Iraqi diaspora worldwide",
@@ -22,7 +22,7 @@
     "statsListings": "500+",
     "statsListingsLabel": "Directory listings",
     "featuredTitle": "Featured Profiles",
-    "whyJoin": "Why Join Irakee?",
+    "whyJoin": "Why Join Iraqee?",
     "reason1Title": "Find Your Community",
     "reason1Desc": "Connect with Iraqis in your city, industry, or field of expertise.",
     "reason2Title": "Showcase Your Work",
@@ -59,20 +59,20 @@
     "submitReview": "Submit Review"
   },
   "about": {
-    "title": "About Irakee",
+    "title": "About Iraqee",
     "mission": "Our Mission",
     "missionDesc": "To build the definitive digital ecosystem for the Iraqi diaspora — directory, marketplace, events, and mediation — owned by the community, not shareholders.",
     "vision": "Our Vision",
     "visionDesc": "Every Iraqi abroad has a digital home where they can find community, opportunity, and connection to Iraq.",
     "structure": "Legal Structure",
-    "structureDesc": "Irakee operates as a Canadian Not-for-Profit Corporation — a non-profit entity dedicated to community benefit. All profits are reinvested into the platform and its mission to serve the Iraqi diaspora worldwide.",
+    "structureDesc": "Iraqee operates as a Canadian Not-for-Profit Corporation — a non-profit entity dedicated to community benefit. All profits are reinvested into the platform and its mission to serve the Iraqi diaspora worldwide.",
     "team": "Our Team",
     "teamMember1Name": "Abood Albakaa",
     "teamMember1Role": "Co-Founder, Tech & Product",
-    "teamMember1Bio": "Iraqi-British civil engineer building Irakee to connect the Iraqi diaspora worldwide. Bridge engineer at Ground Control, creator of @iraqimajles (18K+ subscribers).",
+    "teamMember1Bio": "Iraqi-British civil engineer building Iraqee to connect the Iraqi diaspora worldwide. Bridge engineer at Ground Control, creator of @iraqimajles (18K+ subscribers).",
     "teamMember2Name": "Maryan",
     "teamMember2Role": "Co-Founder, Marketing & Community",
-    "teamMember2Bio": "Leading marketing strategy and community growth for Irakee. Building bridges between Iraqis worldwide through authentic connection and storytelling.",
+    "teamMember2Bio": "Leading marketing strategy and community growth for Iraqee. Building bridges between Iraqis worldwide through authentic connection and storytelling.",
     "teamMessage": "Founded by two Iraqis with a shared vision — one building the technology, the other building the community. Together with Maryan's team, we're creating a digital home for every Iraqi abroad.",
     "values": "Our Values",
     "value1": "Community-owned, not VC-funded",
@@ -81,7 +81,7 @@
     "value4": "Privacy-first and secure"
   },
   "auth": {
-    "title": "Welcome to Irakee",
+    "title": "Welcome to Iraqee",
     "subtitle": "Sign in to connect with the Iraqi diaspora worldwide",
     "googleSignIn": "Continue with Google",
     "emailSignIn": "Sign in with Email",
@@ -100,8 +100,8 @@
     "legal": "Legal",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "notice": "Irakee is a Canadian Not-for-Profit Corporation — a non-profit dedicated to community benefit.",
-    "copyright": "© 2026 Irakee. All rights reserved."
+    "notice": "Iraqee is a Canadian Not-for-Profit Corporation — a non-profit dedicated to community benefit.",
+    "copyright": "© 2026 Iraqee. All rights reserved."
   },
   "common": {
     "loading": "Loading...",

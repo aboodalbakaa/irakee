@@ -1,4 +1,4 @@
-# Irakee — Iraqi Diaspora Platform
+# Iraqee — Iraqi Diaspora Platform
 
 A non-profit platform connecting the Iraqi diaspora worldwide. Directory, marketplace, events, and mediation — built with Next.js 16, Supabase, and internationalization (EN/AR + RTL support).
 
@@ -6,8 +6,8 @@ A non-profit platform connecting the Iraqi diaspora worldwide. Directory, market
 
 ```bash
 # Clone and install
-git clone <your-repo-url> irakee
-cd irakee
+git clone <your-repo-url> iraqee
+cd iraqee
 npm install
 
 # Set up environment
@@ -73,7 +73,7 @@ This is a non-profit community project. Contributions welcome — especially fro
 
 ## 📦 Deploy to Vercel
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/aboodalbakaa/irakee)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/aboodalbakaa/iraqee)
 
 Required environment variables:
 - `NEXT_PUBLIC_SUPABASE_URL` — your Supabase project URL
@@ -81,4 +81,4 @@ Required environment variables:
 
 ## 📄 License
 
-Non-profit / Community Interest Company (CIC) — see [about page](https://irakee.app/about) for details.
+Non-profit / Community Interest Company (CIC) — see [about page](https://iraqee.app/about) for details.

@@ -48,7 +48,7 @@ model VerificationToken {
   @@map("verification_tokens")
 }
 
-// ─── Irakee Application Models ───
+// ─── Iraqee Application Models ───
 
 model User {
   id            String    @id @default(cuid())
