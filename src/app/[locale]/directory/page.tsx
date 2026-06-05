@@ -1,14 +1,14 @@
 import { getTranslations } from "next-intl/server";
-import { Search } from "lucide-react";
-import { ProfileCard } from "@/components/ui/ProfileCard";
-import { Input } from "@/components/ui/Input";
 import { Link } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
+import { DirectoryFilters } from "@/components/ui/DirectoryFilters";
+import { ProfileCard } from "@/components/ui/ProfileCard";
 
 type Props = {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{
+    q?: string;
     profession?: string;
     city?: string;
     country?: string;
@@ -24,7 +24,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// Placeholder data
 const PLACEHOLDER_PROFILES = [
   { id: "1", name: "Layla Hassan", profession: "Software Engineer", city: "London", country: "UK", languages: ["EN", "AR"] },
   { id: "2", name: "Omar Al-Jamil", profession: "Architect", city: "Dubai", country: "UAE", languages: ["EN", "AR"] },
@@ -34,58 +33,73 @@ const PLACEHOLDER_PROFILES = [
   { id: "6", name: "Karim Mansour", profession: "Civil Engineer", city: "Birmingham", country: "UK", languages: ["EN", "AR"] },
 ];
 
-const PROFESSIONS = [
-  "All Professions",
-  "Software Engineer",
-  "Architect",
-  "Physician",
-  "Lawyer",
-  "Graphic Designer",
-  "Civil Engineer",
-];
+const ITEMS_PER_PAGE = 12;
 
 export default async function DirectoryPage({ params, searchParams }: Props) {
   const { locale } = await params;
   const sp = await searchParams;
   const t = await getTranslations({ locale, namespace: "directory" });
 
-  // Build Prisma query with filters
-  const where: Record<string, unknown> = {};
-  if (sp.profession) where.profession = sp.profession;
-  if (sp.city) where.city = sp.city;
-  if (sp.country) where.country = sp.country;
+  const currentPage = sp.page ? Math.max(1, parseInt(sp.page, 10)) : 1;
+  const skip = (currentPage - 1) * ITEMS_PER_PAGE;
 
-  let dbProfiles: any[] = [];
-  try {
-    dbProfiles = await prisma.profile.findMany({
-      where,
-      take: 50,
-      orderBy: { createdAt: "desc" },
-      include: { user: { select: { name: true } } },
-    }) as unknown as any[];
-  } catch {
-    dbProfiles = [];
+  const where: Parameters<typeof prisma.profile.findMany>[0]["where"] = {};
+  if (sp.profession) where.profession = sp.profession;
+  if (sp.city) where.city = { contains: sp.city, mode: "insensitive" };
+  if (sp.country) where.country = { contains: sp.country, mode: "insensitive" };
+  if (sp.q) {
+    where.OR = [
+      { displayName: { contains: sp.q, mode: "insensitive" } },
+      { profession: { contains: sp.q, mode: "insensitive" } },
+      { city: { contains: sp.q, mode: "insensitive" } },
+    ];
   }
 
-  const allProfiles =
-    dbProfiles.length > 0
-      ? dbProfiles.map((p: any) => ({
-          id: p.id,
-          name: p.displayName || p.user?.name || "Anonymous",
-          profession: p.profession || "",
-          city: p.city || "",
-          country: p.country || "",
-          languages: p.languages,
-        }))
-      : PLACEHOLDER_PROFILES;
+  type ProfileRow = {
+    id: string;
+    displayName: string | null;
+    profession: string | null;
+    city: string | null;
+    country: string | null;
+    languages: string[];
+    user: { name: string | null };
+  };
 
-  const currentPage = sp.page ? parseInt(sp.page, 10) : 1;
-  const itemsPerPage = 6;
-  const totalPages = Math.ceil(allProfiles.length / itemsPerPage);
-  const paginatedProfiles = allProfiles.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  let profiles: Array<{ id: string; name: string; profession: string; city: string; country: string; languages: string[] }> = [];
+  let totalPages = 1;
+  let usingPlaceholder = false;
+
+  try {
+    const [rows, total] = await Promise.all([
+      prisma.profile.findMany({
+        where,
+        take: ITEMS_PER_PAGE,
+        skip,
+        orderBy: { createdAt: "desc" },
+        include: { user: { select: { name: true } } },
+      }) as Promise<ProfileRow[]>,
+      prisma.profile.count({ where }),
+    ]);
+
+    if (total === 0 && !sp.profession && !sp.city && !sp.country && !sp.q) {
+      usingPlaceholder = true;
+      profiles = PLACEHOLDER_PROFILES;
+    } else {
+      profiles = rows.map((p) => ({
+        id: p.id,
+        name: p.displayName ?? p.user?.name ?? "Anonymous",
+        profession: p.profession ?? "",
+        city: p.city ?? "",
+        country: p.country ?? "",
+        languages: p.languages,
+      }));
+      totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
+    }
+  } catch (err) {
+    console.error("[directory] db error:", err);
+    usingPlaceholder = true;
+    profiles = PLACEHOLDER_PROFILES;
+  }
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -99,76 +113,51 @@ export default async function DirectoryPage({ params, searchParams }: Props) {
         </div>
 
         {/* Search & Filters */}
-        <div className="mt-8">
-          <div className="relative mx-auto max-w-xl">
-            <Search className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-stone-400" />
-            <Input
-              type="text"
-              placeholder={t("searchPlaceholder")}
-              className="pl-10 h-12"
-            />
-          </div>
-
-          <div className="mt-4 flex flex-wrap justify-center gap-3">
-            <select className="h-10 rounded-lg border border-stone-200 bg-white px-3 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-teal-500">
-              <option value="">{t("filterProfession")}</option>
-              {PROFESSIONS.slice(1).map((prof) => (
-                <option key={prof} value={prof}>
-                  {prof}
-                </option>
-              ))}
-            </select>
-            <select className="h-10 rounded-lg border border-stone-200 bg-white px-3 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-teal-500">
-              <option value="">{t("filterCity")}</option>
-              <option value="london">London</option>
-              <option value="dubai">Dubai</option>
-              <option value="chicago">Chicago</option>
-              <option value="berlin">Berlin</option>
-            </select>
-            <select className="h-10 rounded-lg border border-stone-200 bg-white px-3 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-teal-500">
-              <option value="">{t("filterCountry")}</option>
-              <option value="uk">UK</option>
-              <option value="uae">UAE</option>
-              <option value="usa">USA</option>
-              <option value="germany">Germany</option>
-            </select>
-          </div>
-        </div>
+        <DirectoryFilters
+          currentQ={sp.q}
+          currentProfession={sp.profession}
+          currentCity={sp.city}
+          currentCountry={sp.country}
+        />
 
         {/* Results */}
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {paginatedProfiles.map((profile) => (
+          {profiles.map((profile) => (
             <ProfileCard key={profile.id} {...profile} />
           ))}
         </div>
 
-        {paginatedProfiles.length === 0 && (
+        {profiles.length === 0 && (
           <div className="mt-20 text-center">
             <p className="text-stone-500">{t("noResults")}</p>
           </div>
         )}
 
-        {/* Pagination */}
-        {totalPages > 1 && (
+        {/* Pagination — only shown when using real DB data */}
+        {!usingPlaceholder && totalPages > 1 && (
           <div className="mt-10 flex items-center justify-center gap-2">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-              (pageNum) => (
-                <Link
-                  key={pageNum}
-                  href={{
-                    pathname: "/directory",
-                    query: pageNum === 1 ? undefined : { page: String(pageNum) },
-                  }}
-                  className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
-                    pageNum === currentPage
-                      ? "bg-teal-700 text-white"
-                      : "border border-stone-200 text-stone-700 hover:bg-stone-100"
-                  }`}
-                >
-                  {pageNum}
-                </Link>
-              )
-            )}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+              <Link
+                key={pageNum}
+                href={{
+                  pathname: "/directory",
+                  query: {
+                    ...(sp.q && { q: sp.q }),
+                    ...(sp.profession && { profession: sp.profession }),
+                    ...(sp.city && { city: sp.city }),
+                    ...(sp.country && { country: sp.country }),
+                    ...(pageNum > 1 && { page: String(pageNum) }),
+                  },
+                }}
+                className={`flex h-10 w-10 items-center justify-center rounded-lg text-sm font-medium transition-colors ${
+                  pageNum === currentPage
+                    ? "bg-teal-700 text-white"
+                    : "border border-stone-200 text-stone-700 hover:bg-stone-100"
+                }`}
+              >
+                {pageNum}
+              </Link>
+            ))}
           </div>
         )}
       </div>

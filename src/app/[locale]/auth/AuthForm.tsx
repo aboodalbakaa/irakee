@@ -5,26 +5,61 @@ import { useTranslations } from "next-intl";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
-import { signIn } from "@/auth";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/Card";
+import { signIn } from "next-auth/react";
 
 export default function AuthForm() {
   const t = useTranslations("auth");
   const [isSignUp, setIsSignUp] = React.useState(false);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [error, setError] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const handleGoogleSignIn = async () => {
-    await signIn("google", { redirectTo: "/" });
+    await signIn("google", { callbackUrl: "/" });
   };
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
-    await signIn("credentials", {
-      email,
-      password,
-      redirectTo: "/",
-    });
+    setError("");
+    setLoading(true);
+
+    try {
+      if (isSignUp) {
+        const res = await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data.error ?? "Signup failed. Please try again.");
+          return;
+        }
+      }
+
+      const result = await signIn("credentials", {
+        email,
+        password,
+        callbackUrl: "/",
+        redirect: false,
+      });
+
+      if (result?.error) {
+        setError("Invalid email or password.");
+      } else if (result?.url) {
+        window.location.href = result.url;
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,6 +79,7 @@ export default function AuthForm() {
             size="lg"
             className="w-full"
             onClick={handleGoogleSignIn}
+            disabled={loading}
           >
             <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="none">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
@@ -64,6 +100,13 @@ export default function AuthForm() {
             </div>
           </div>
 
+          {/* Error message */}
+          {error && (
+            <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
           {/* Email Form */}
           <form onSubmit={handleEmailAuth} className="space-y-4">
             <div>
@@ -80,6 +123,7 @@ export default function AuthForm() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
             <div>
@@ -96,8 +140,14 @@ export default function AuthForm() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="pl-10"
+                minLength={8}
+                disabled={loading}
               />
+              {isSignUp && (
+                <p className="mt-1 text-xs text-stone-400">
+                  Minimum 8 characters
+                </p>
+              )}
             </div>
 
             <Button
@@ -105,9 +155,14 @@ export default function AuthForm() {
               variant="primary"
               size="lg"
               className="w-full"
+              disabled={loading}
             >
               <Mail className="h-4 w-4" />
-              {isSignUp ? t("signUpButton") : t("signInButton")}
+              {loading
+                ? "Please wait…"
+                : isSignUp
+                ? t("signUpButton")
+                : t("signInButton")}
             </Button>
           </form>
 
@@ -116,7 +171,10 @@ export default function AuthForm() {
             {isSignUp ? t("hasAccount") : t("noAccount")}{" "}
             <button
               type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setError("");
+              }}
               className="font-medium text-teal-700 hover:text-teal-800"
             >
               {isSignUp ? t("switchToSignIn") : t("switchToSignUp")}

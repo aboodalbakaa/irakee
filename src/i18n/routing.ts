@@ -8,7 +8,7 @@ export const routing = defineRouting({
     "/": "/",
     "/directory": {
       en: "/directory",
-      ar: "/dليل",
+      ar: "/دليل",
     },
     "/about": {
       en: "/about",

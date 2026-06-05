@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { MapPin, Globe, Calendar, Star, Mail } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
@@ -11,8 +11,17 @@ type Props = {
   params: Promise<{ locale: string; id: string }>;
 };
 
-// Placeholder data
-const MOCK_PROFILES: Record<string, any> = {
+const MOCK_PROFILES: Record<string, {
+  id: string;
+  name: string;
+  profession: string;
+  city: string;
+  country: string;
+  languages: string[];
+  bio: string;
+  memberSince: string;
+  reviews: Array<{ id: string; reviewer: string; rating: number; content: string }>;
+}> = {
   "1": {
     id: "1",
     name: "Layla Hassan",
@@ -20,7 +29,7 @@ const MOCK_PROFILES: Record<string, any> = {
     city: "London",
     country: "UK",
     languages: ["English", "Arabic"],
-    bio: "Full-stack developer with 8+ years of experience building web applications. Passionate about connecting the Iraqi diaspora through technology. Previously worked at major UK tech companies and now running my own consultancy.",
+    bio: "Full-stack developer with 8+ years of experience building web applications. Passionate about connecting the Iraqi diaspora through technology.",
     memberSince: "January 2026",
     reviews: [
       { id: "r1", reviewer: "Ahmed J.", rating: 5, content: "Excellent professional, highly recommend!" },
@@ -33,46 +42,78 @@ export default async function ProfilePage({ params }: Props) {
   const { locale, id } = await params;
   const t = await getTranslations({ locale, namespace: "profile" });
 
-  // Fetch profile from database, fall back to mock
-  let profile;
+  type ReviewRow = {
+    id: string;
+    rating: number;
+    content: string | null;
+    reviewer: { name: string | null };
+  };
+
+  type ProfileResult = {
+    id: string;
+    displayName: string | null;
+    profession: string | null;
+    city: string | null;
+    country: string | null;
+    languages: string[];
+    bio: string | null;
+    createdAt: Date;
+    user: {
+      name: string | null;
+      received: ReviewRow[];
+    };
+  };
+
+  let profile: {
+    id: string;
+    name: string;
+    profession: string | null;
+    city: string | null;
+    country: string | null;
+    languages: string[];
+    bio: string | null;
+    memberSince: string;
+    reviews: Array<{ id: string; reviewer: string; rating: number; content: string | null }>;
+  } | undefined;
+
   try {
-    const dbProfile = await prisma.profile.findUnique({
+    const dbProfile = (await prisma.profile.findUnique({
       where: { id },
       include: {
         user: {
           include: {
-            reviews: {
+            received: {
               include: { reviewer: { select: { name: true } } },
               orderBy: { createdAt: "desc" },
             },
           },
         },
       },
-    });
+    })) as ProfileResult | null;
 
     if (dbProfile) {
       profile = {
         id: dbProfile.id,
-        name: dbProfile.displayName || dbProfile.user.name || "Anonymous",
+        name: dbProfile.displayName ?? dbProfile.user.name ?? "Anonymous",
         profession: dbProfile.profession,
         city: dbProfile.city,
         country: dbProfile.country,
         languages: dbProfile.languages,
         bio: dbProfile.bio,
-        memberSince: dbProfile.createdAt.toLocaleDateString(locale === "ar" ? "ar-SA" : "en-US", {
-          year: "numeric",
-          month: "long",
-        }),
-        reviews: dbProfile.user.reviews.map((r) => ({
+        memberSince: dbProfile.createdAt.toLocaleDateString(
+          locale === "ar" ? "ar-SA" : "en-US",
+          { year: "numeric", month: "long" }
+        ),
+        reviews: dbProfile.user.received.map((r) => ({
           id: r.id,
-          reviewer: r.reviewer.name || "Anonymous",
+          reviewer: r.reviewer.name ?? "Anonymous",
           rating: r.rating,
           content: r.content,
         })),
       };
     }
-  } catch {
-    // fallback to mock below
+  } catch (err) {
+    console.error("[profile] db error:", err);
   }
 
   if (!profile) {
@@ -98,9 +139,7 @@ export default async function ProfilePage({ params }: Props) {
                   {profile.name}
                 </h1>
                 {profile.profession && (
-                  <p className="mt-1 text-lg text-stone-500">
-                    {profile.profession}
-                  </p>
+                  <p className="mt-1 text-lg text-stone-500">{profile.profession}</p>
                 )}
                 <div className="mt-3 flex flex-wrap items-center gap-4 text-sm text-stone-500">
                   {profile.city && profile.country && (
@@ -123,7 +162,7 @@ export default async function ProfilePage({ params }: Props) {
                   )}
                 </div>
                 <div className="mt-6 flex gap-3">
-                  <Link href={`/${locale}/auth`}>
+                  <Link href="/auth">
                     <Button variant="primary">
                       <Mail className="h-4 w-4" />
                       {t("contact")}
@@ -155,7 +194,7 @@ export default async function ProfilePage({ params }: Props) {
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-2">
-                {profile.languages.map((lang: string) => (
+                {profile.languages.map((lang) => (
                   <Badge key={lang} variant="default">
                     {lang}
                   </Badge>
@@ -173,7 +212,7 @@ export default async function ProfilePage({ params }: Props) {
           <CardContent>
             {profile.reviews && profile.reviews.length > 0 ? (
               <div className="space-y-4">
-                {profile.reviews.map((review: any) => (
+                {profile.reviews.map((review) => (
                   <div
                     key={review.id}
                     className="border-b border-stone-100 pb-4 last:border-0 last:pb-0"
@@ -195,9 +234,7 @@ export default async function ProfilePage({ params }: Props) {
                         ))}
                       </div>
                     </div>
-                    <p className="mt-1 text-sm text-stone-600">
-                      {review.content}
-                    </p>
+                    <p className="mt-1 text-sm text-stone-600">{review.content}</p>
                   </div>
                 ))}
               </div>

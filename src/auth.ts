@@ -3,7 +3,8 @@ import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "./lib/db";
- 
+import bcrypt from "bcryptjs";
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
@@ -19,8 +20,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const user = await prisma.user.findUnique({
           where: { email: credentials.email as string },
         });
-        if (!user) return null;
-        // Password check will use bcryptjs when signup works
+        if (!user?.hashedPassword) return null;
+        const isValid = await bcrypt.compare(
+          credentials.password as string,
+          user.hashedPassword
+        );
+        if (!isValid) return null;
         return user;
       },
     }),

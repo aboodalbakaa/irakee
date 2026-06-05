@@ -1,7 +1,6 @@
 "use client";
 
 import { MapPin, Globe } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/routing";
 import { Card, CardContent } from "./Card";
 import { Badge } from "./Badge";
@@ -30,8 +29,6 @@ export function ProfileCard({
   bio,
   className,
 }: ProfileCardProps) {
-  const t = useTranslations();
-
   return (
     <Link href={{ pathname: "/profile/[id]", params: { id } }}>
       <Card
