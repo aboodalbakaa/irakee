@@ -7,11 +7,11 @@ const badgeVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-teal-100 text-teal-800",
-        secondary: "bg-amber-100 text-amber-800",
-        outline: "border border-stone-200 text-stone-700",
-        success: "bg-green-100 text-green-800",
-        danger: "bg-red-100 text-red-800",
+        default: "bg-iraq-navy/10 text-iraq-navy",
+        secondary: "bg-iraq-gold/15 text-iraq-gold-dark",
+        outline: "border border-iraq-gold/20 text-iraq-stone",
+        success: "bg-iraq-green/10 text-iraq-green",
+        danger: "bg-iraq-red/10 text-iraq-red",
       },
     },
     defaultVariants: {

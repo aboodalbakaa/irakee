@@ -8,7 +8,7 @@ export function Footer() {
   const locale = useLocale();
 
   return (
-    <footer className="border-t border-stone-200 bg-stone-50">
+    <footer className="bg-iraq-navy border-t border-iraq-gold/10">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {/* Brand */}
@@ -17,32 +17,32 @@ export function Footer() {
               href={`/`}
               className="flex items-center gap-2"
             >
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-teal-700 text-xs font-bold text-white">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-iraq-gold text-xs font-bold text-iraq-navy">
                 I
               </div>
-              <span className="text-lg font-bold text-teal-700">
+              <span className="text-lg font-bold text-iraq-gold">
                 Irakee
               </span>
             </Link>
-            <p className="mt-3 text-sm text-stone-500">
+            <p className="mt-3 text-sm text-iraq-cream/60">
               {t("tagline")}
             </p>
-            <div className="mt-4 flex items-center gap-1 text-xs text-stone-400">
-              <Heart className="h-3 w-3 fill-amber-500 text-amber-500" />
-              <span>Community Interest Company</span>
+            <div className="mt-4 flex items-center gap-1 text-xs text-iraq-cream/50">
+              <Heart className="h-3 w-3 fill-iraq-gold text-iraq-gold" />
+              <span>{t("notice")}</span>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="mb-3 text-sm font-semibold text-stone-900">
+            <h3 className="mb-3 text-sm font-semibold text-iraq-gold">
               {t("quickLinks")}
             </h3>
             <ul className="space-y-2">
               <li>
                 <Link
                   href={`/${locale}/directory`}
-                  className="text-sm text-stone-500 hover:text-teal-700 transition-colors"
+                  className="text-sm text-iraq-cream/60 hover:text-iraq-gold transition-colors"
                 >
                   {navT("directory")}
                 </Link>
@@ -50,7 +50,7 @@ export function Footer() {
               <li>
                 <Link
                   href={`/${locale}/about`}
-                  className="text-sm text-stone-500 hover:text-teal-700 transition-colors"
+                  className="text-sm text-iraq-cream/60 hover:text-iraq-gold transition-colors"
                 >
                   {navT("about")}
                 </Link>
@@ -60,17 +60,17 @@ export function Footer() {
 
           {/* Legal */}
           <div>
-            <h3 className="mb-3 text-sm font-semibold text-stone-900">
+            <h3 className="mb-3 text-sm font-semibold text-iraq-gold">
               {t("legal")}
             </h3>
             <ul className="space-y-2">
               <li>
-                <span className="text-sm text-stone-500 hover:text-teal-700 transition-colors cursor-pointer">
+                <span className="text-sm text-iraq-cream/60 hover:text-iraq-gold transition-colors cursor-pointer">
                   {t("privacy")}
                 </span>
               </li>
               <li>
-                <span className="text-sm text-stone-500 hover:text-teal-700 transition-colors cursor-pointer">
+                <span className="text-sm text-iraq-cream/60 hover:text-iraq-gold transition-colors cursor-pointer">
                   {t("terms")}
                 </span>
               </li>
@@ -78,16 +78,16 @@ export function Footer() {
           </div>
         </div>
 
-        {/* CIC Notice */}
-        <div className="mt-8 rounded-lg bg-teal-50 p-4">
-          <p className="text-center text-xs text-teal-700">
-            {t("cicNotice")}
+        {/* Legal Notice */}
+        <div className="mt-8 rounded-lg bg-iraq-navy-light/50 border border-iraq-gold/10 p-4">
+          <p className="text-center text-xs text-iraq-cream/60">
+            {t("notice")}
           </p>
         </div>
 
         {/* Copyright */}
-        <div className="mt-6 border-t border-stone-200 pt-6 text-center">
-          <p className="text-xs text-stone-400">{t("copyright")}</p>
+        <div className="mt-6 border-t border-iraq-gold/10 pt-6 text-center">
+          <p className="text-xs text-iraq-cream/40">{t("copyright")}</p>
         </div>
       </div>
     </footer>

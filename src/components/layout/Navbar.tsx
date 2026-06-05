@@ -26,17 +26,17 @@ export function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-stone-200 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <nav className="sticky top-0 z-50 border-b border-iraq-gold/10 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
           href={`/`}
           className="flex items-center gap-2"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-700 text-sm font-bold text-white">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-iraq-navy text-sm font-bold text-iraq-gold">
             I
           </div>
-          <span className="text-xl font-bold tracking-tight text-teal-700">
+          <span className="text-xl font-bold tracking-tight text-iraq-navy">
             Irakee
           </span>
         </Link>
@@ -50,8 +50,8 @@ export function Navbar() {
               className={cn(
                 "rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                 isActive(link.href)
-                  ? "bg-teal-50 text-teal-700"
-                  : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
+                  ? "bg-iraq-gold/10 text-iraq-gold"
+                  : "text-stone-600 hover:bg-iraq-gold/5 hover:text-iraq-navy"
               )}
             >
               {link.label}
@@ -77,6 +77,7 @@ export function Navbar() {
             size="icon"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={t("mobileMenu")}
+            className="text-iraq-navy hover:text-iraq-gold"
           >
             {mobileOpen ? (
               <X className="h-5 w-5" />
@@ -89,7 +90,7 @@ export function Navbar() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="border-t border-stone-200 bg-white md:hidden">
+        <div className="border-t border-iraq-gold/10 bg-white md:hidden">
           <div className="space-y-1 px-4 pb-4 pt-2">
             {links.map((link) => (
               <Link
@@ -99,8 +100,8 @@ export function Navbar() {
                 className={cn(
                   "block rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                   isActive(link.href)
-                    ? "bg-teal-50 text-teal-700"
-                    : "text-stone-600 hover:bg-stone-100"
+                    ? "bg-iraq-gold/10 text-iraq-gold"
+                    : "text-stone-600 hover:bg-iraq-gold/5"
                 )}
               >
                 {link.label}

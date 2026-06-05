@@ -1,82 +1,77 @@
-/* Irakee Platform - Global Styles */
+/* Irakee Platform — Iraqi-inspired Design System */
 @import "tailwindcss";
 
-/* Brand Design Tokens */
+/* ─── Brand Design Tokens ─── */
 @theme inline {
-  --color-teal-50: #f0fdfa;
-  --color-teal-100: #ccfbf1;
-  --color-teal-200: #99f6e4;
-  --color-teal-300: #5eead4;
-  --color-teal-400: #2dd4bf;
-  --color-teal-500: #14b8a6;
-  --color-teal-600: #0d9488;
-  --color-teal-700: #0f766e;
-  --color-teal-800: #115e59;
-  --color-teal-900: #134e4a;
-
-  --color-amber-50: #fffbeb;
-  --color-amber-100: #fef3c7;
-  --color-amber-200: #fde68a;
-  --color-amber-300: #fcd34d;
-  --color-amber-400: #fbbf24;
-  --color-amber-500: #f59e0b;
-  --color-amber-600: #d97706;
-  --color-amber-700: #b45309;
-  --color-amber-800: #92400e;
-  --color-amber-900: #78350f;
+  /* Iraqi-inspired palette */
+  --color-iraq-navy: #0C1B33;
+  --color-iraq-navy-light: #1A2D4A;
+  --color-iraq-gold: #C9A84C;
+  --color-iraq-gold-light: #E8D48B;
+  --color-iraq-gold-dark: #A8872E;
+  --color-iraq-red: #CE1126;
+  --color-iraq-green: #007A3D;
+  --color-iraq-cream: #F8F5F0;
+  --color-iraq-warm: #EDE7D9;
+  --color-iraq-stone: #8B8170;
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", "Georgia", serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
-/* Global Resets */
-* {
-  box-sizing: border-box;
-}
+/* ─── Base ─── */
+* { box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #ffffff;
-  color: #1c1917;
+  color: #1A1A2E;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* RTL Support */
-[dir="rtl"] {
-  text-align: right;
+/* ─── RTL Support ─── */
+[dir="rtl"] { text-align: right; }
+
+/* ─── Pattern Background ─── */
+.mesopotamian-pattern {
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(201, 168, 76, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(12, 27, 51, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(201, 168, 76, 0.05) 0%, transparent 50%);
 }
 
-[dir="rtl"] .ltr\:ml-auto {
-  margin-left: 0;
-  margin-right: auto;
+/* ─── Premium hover effects ─── */
+.card-premium {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card-premium:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(12, 27, 51, 0.1);
 }
 
-[dir="rtl"] .rtl\:mr-auto {
-  margin-right: 0;
-  margin-left: auto;
+/* ─── Gold accent underline ─── */
+.gold-underline {
+  position: relative;
+  display: inline-block;
+}
+.gold-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--color-iraq-gold), var(--color-iraq-gold-light));
+  border-radius: 2px;
 }
 
-[dir="rtl"] .flex-row {
-  /* Keep flex row, but order respects dir */
-}
-
-/* Smooth card hover transitions */
-.card-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card-hover:hover {
-  transform: translateY(-2px);
-}
-
-/* Line clamp utility */
+/* ─── Line clamp ─── */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;

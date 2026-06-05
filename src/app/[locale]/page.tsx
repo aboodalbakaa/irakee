@@ -1,6 +1,6 @@
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
-import { Search, Users, Globe, FileText, ArrowRight, ArrowLeft } from "lucide-react";
+import { Search, Users, Globe, FileText, ArrowRight, ArrowLeft, Star, Handshake } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
@@ -71,25 +71,38 @@ export default async function HomePage({ params }: Props) {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-teal-800 via-teal-700 to-teal-900">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE4YzEuNjU3IDAgMy0xLjM0MyAzLTNzLTEuMzQzLTMtMy0zLTMgMS4zNDMtMyAzIDEuMzQzIDMgMyAzem0wIDM2YzEuNjU3IDAgMy0xLjM0MyAzLTNzLTEuMzQzLTMtMy0zLTMgMS4zNDMtMyAzIDEuMzQzIDMgMyAzem0tMTgtMThjMS42NTcgMCAzLTEuMzQzIDMtM3MtMS4zNDMtMy0zLTMtMyAxLjM0My0zIDMgMS4zNDMgMyAzIDN6bTM2IDBjMS42NTcgMCAzLTEuMzQzIDMtM3MtMS4zNDMtMy0zLTMtMyAxLjM0My0zIDMgMS4zNDMgMyAzIDN6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-40" />
+      <section className="relative overflow-hidden bg-iraq-navy">
+        {/* Gold geometric pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.07]"
+          style={{
+            backgroundImage: `
+              linear-gradient(30deg, #C9A84C 12%, transparent 12.5%, transparent 87%, #C9A84C 87.5%, #C9A84C),
+              linear-gradient(150deg, #C9A84C 12%, transparent 12.5%, transparent 87%, #C9A84C 87.5%, #C9A84C),
+              linear-gradient(30deg, #C9A84C 12%, transparent 12.5%, transparent 87%, #C9A84C 87.5%, #C9A84C),
+              linear-gradient(150deg, #C9A84C 12%, transparent 12.5%, transparent 87%, #C9A84C 87.5%, #C9A84C),
+              linear-gradient(60deg, rgba(201,168,76,0.3) 25%, transparent 25.5%, transparent 75%, rgba(201,168,76,0.3) 75%, rgba(201,168,76,0.3))
+            `,
+            backgroundSize: '80px 140px',
+          }}
+        />
         <div className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl text-center">
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-              {t("heroTitle")}
+              {t("heroTitle")}{" "}
+              <span className="text-iraq-gold">🇮🇶</span>
             </h1>
-            <p className="mt-6 text-lg leading-8 text-teal-100">
+            <p className="mt-6 text-lg leading-8 text-iraq-cream/80">
               {t("heroSubtitle")}
             </p>
 
             {/* Search */}
             <div className="mx-auto mt-10 max-w-xl">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-teal-300" />
+                <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-iraq-gold/60" />
                 <input
                   type="text"
                   placeholder={t("searchPlaceholder")}
-                  className="h-14 w-full rounded-xl border-0 bg-white/10 pl-12 pr-4 text-base text-white placeholder:text-teal-200 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-amber-400"
+                  className="h-14 w-full rounded-xl border border-iraq-gold/20 bg-iraq-navy-light/80 pl-12 pr-4 text-base text-white placeholder:text-iraq-cream/50 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-iraq-gold focus:border-iraq-gold"
                 />
               </div>
             </div>
@@ -97,7 +110,11 @@ export default async function HomePage({ params }: Props) {
             {/* CTAs */}
             <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link href={`/${locale}/auth`}>
-                <Button variant="secondary" size="lg" className="font-semibold">
+                <Button
+                  variant="secondary"
+                  size="lg"
+                  className="shadow-lg shadow-iraq-gold/20"
+                >
                   {t("joinCta")}
                   {locale === "ar" ? (
                     <ArrowLeft className="ltr:ml-2 rtl:mr-2 h-5 w-5" />
@@ -110,7 +127,7 @@ export default async function HomePage({ params }: Props) {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="border-white/30 text-white hover:bg-white/10"
+                  className="border-iraq-gold/50 text-iraq-gold hover:bg-iraq-gold/10"
                 >
                   {t("browseCta")}
                 </Button>
@@ -121,39 +138,39 @@ export default async function HomePage({ params }: Props) {
       </section>
 
       {/* Stats Section */}
-      <section className="border-b border-stone-200 bg-white">
+      <section className="border-b border-iraq-gold/10 bg-iraq-cream mesopotamian-pattern">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
             <div className="text-center">
               <div className="flex items-center justify-center">
-                <Users className="h-8 w-8 text-amber-500" />
+                <Users className="h-8 w-8 text-iraq-gold" />
               </div>
-              <p className="mt-3 text-3xl font-bold text-teal-800">
+              <p className="mt-3 text-3xl font-bold text-iraq-navy">
                 {t("statsMembers")}
               </p>
-              <p className="mt-1 text-sm text-stone-500">
+              <p className="mt-1 text-sm text-iraq-stone">
                 {t("statsMembersLabel")}
               </p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center">
-                <Globe className="h-8 w-8 text-amber-500" />
+                <Globe className="h-8 w-8 text-iraq-gold" />
               </div>
-              <p className="mt-3 text-3xl font-bold text-teal-800">
+              <p className="mt-3 text-3xl font-bold text-iraq-navy">
                 {t("statsCountries")}
               </p>
-              <p className="mt-1 text-sm text-stone-500">
+              <p className="mt-1 text-sm text-iraq-stone">
                 {t("statsCountriesLabel")}
               </p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center">
-                <FileText className="h-8 w-8 text-amber-500" />
+                <FileText className="h-8 w-8 text-iraq-gold" />
               </div>
-              <p className="mt-3 text-3xl font-bold text-teal-800">
+              <p className="mt-3 text-3xl font-bold text-iraq-navy">
                 {t("statsListings")}
               </p>
-              <p className="mt-1 text-sm text-stone-500">
+              <p className="mt-1 text-sm text-iraq-stone">
                 {t("statsListingsLabel")}
               </p>
             </div>
@@ -162,61 +179,65 @@ export default async function HomePage({ params }: Props) {
       </section>
 
       {/* Featured Profiles */}
-      <section className="bg-stone-50 py-16">
+      <section className="bg-iraq-cream py-16 mesopotamian-pattern">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-2xl font-bold text-stone-900 sm:text-3xl">
+          <h2 className="text-center text-2xl font-bold text-iraq-navy sm:text-3xl">
             {t("featuredTitle")}
           </h2>
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {profiles.map((profile: any) => (
-              <ProfileCard key={profile.id} {...profile} />
+              <ProfileCard
+                key={profile.id}
+                {...profile}
+                className="card-premium border border-iraq-gold/20 hover:border-iraq-gold/50"
+              />
             ))}
           </div>
         </div>
       </section>
 
       {/* Why Join */}
-      <section className="py-16">
+      <section className="py-16 bg-white mesopotamian-pattern">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-2xl font-bold text-stone-900 sm:text-3xl">
+          <h2 className="text-center text-2xl font-bold text-iraq-navy sm:text-3xl">
             {t("whyJoin")}
           </h2>
           <div className="mt-10 grid gap-8 sm:grid-cols-3">
-            <Card className="border-teal-100">
+            <Card className="border-iraq-gold/20 card-premium">
               <CardContent className="p-6 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
-                  <Users className="h-6 w-6 text-teal-700" />
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-iraq-gold/10 border border-iraq-gold/20">
+                  <Users className="h-6 w-6 text-iraq-gold" />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-stone-900">
+                <h3 className="mt-4 text-lg font-semibold text-iraq-navy">
                   {t("reason1Title")}
                 </h3>
-                <p className="mt-2 text-sm text-stone-500">
+                <p className="mt-2 text-sm text-iraq-stone">
                   {t("reason1Desc")}
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-teal-100">
+            <Card className="border-iraq-gold/20 card-premium">
               <CardContent className="p-6 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
-                  <FileText className="h-6 w-6 text-teal-700" />
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-iraq-gold/10 border border-iraq-gold/20">
+                  <Star className="h-6 w-6 text-iraq-gold" />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-stone-900">
+                <h3 className="mt-4 text-lg font-semibold text-iraq-navy">
                   {t("reason2Title")}
                 </h3>
-                <p className="mt-2 text-sm text-stone-500">
+                <p className="mt-2 text-sm text-iraq-stone">
                   {t("reason2Desc")}
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-teal-100">
+            <Card className="border-iraq-gold/20 card-premium">
               <CardContent className="p-6 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
-                  <Globe className="h-6 w-6 text-teal-700" />
+                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-iraq-gold/10 border border-iraq-gold/20">
+                  <Handshake className="h-6 w-6 text-iraq-gold" />
                 </div>
-                <h3 className="mt-4 text-lg font-semibold text-stone-900">
+                <h3 className="mt-4 text-lg font-semibold text-iraq-navy">
                   {t("reason3Title")}
                 </h3>
-                <p className="mt-2 text-sm text-stone-500">
+                <p className="mt-2 text-sm text-iraq-stone">
                   {t("reason3Desc")}
                 </p>
               </CardContent>
