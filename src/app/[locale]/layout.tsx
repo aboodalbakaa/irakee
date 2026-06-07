@@ -26,7 +26,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: "Iraqee — Your Iraqi community worldwide",
     description: t("heroSubtitle"),
     icons: {
-      icon: "/favicon.ico",
+      icon: "/favicon.svg",
+      apple: "/logo.svg",
     },
   };
 }

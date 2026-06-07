@@ -48,6 +48,7 @@ export function Navbar() {
   const links = [
     { href: "/" as const, label: t("home") },
     { href: "/feed" as const, label: t("feed"), icon: Rss },
+    { href: "/map" as const, label: "Map" },
     { href: "/directory" as const, label: t("directory") },
     { href: "/events" as const, label: t("events") },
     { href: "/listings" as const, label: t("listings") },
@@ -75,12 +76,12 @@ export function Navbar() {
         {/* Logo */}
         <Link
           href={`/`}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 group"
         >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-iraq-navy text-sm font-bold text-iraq-gold">
-            I
+          <div className="relative flex h-9 w-9 items-center justify-center">
+            <img src="/logo.svg" alt="Iraqee" className="h-9 w-9" />
           </div>
-          <span className="text-xl font-bold tracking-tight text-iraq-navy">
+          <span className="text-xl font-bold tracking-tight text-iraq-navy group-hover:text-iraq-gold transition-colors">
             Iraqee
           </span>
         </Link>

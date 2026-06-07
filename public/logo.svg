@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Background shield/badge -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0C1B33"/>
+      <stop offset="100%" stop-color="#1A2D4A"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#D4A843"/>
+      <stop offset="100%" stop-color="#F0E0A0"/>
+    </linearGradient>
+    <linearGradient id="gold-vert" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#D4A843"/>
+      <stop offset="100%" stop-color="#B8922E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Outer ring with cuneiform-inspired pattern -->
+  <circle cx="100" cy="100" r="96" stroke="url(#gold)" stroke-width="3" fill="none" opacity="0.3"/>
+  <circle cx="100" cy="100" r="92" stroke="url(#gold)" stroke-width="0.5" fill="none" opacity="0.2"/>
+
+  <!-- Star (Ishtar / Mesopotamian 8-pointed star) -->
+  <polygon points="100,40 108,68 136,68 113,84 120,112 100,96 80,112 87,84 64,68 92,68"
+           fill="url(#gold)" opacity="0.9"/>
+
+  <!-- Inner shield -->
+  <circle cx="100" cy="108" r="38" fill="url(#bg)" stroke="url(#gold)" stroke-width="2"/>
+
+  <!-- Letter I (Iraqee) -->
+  <text x="100" y="118" font-family="Georgia, 'Playfair Display', serif" font-size="36"
+        font-weight="bold" fill="url(#gold)" text-anchor="middle" dominant-baseline="middle">
+    I
+  </text>
+
+  <!-- Bottom text -->
+  <text x="100" y="175" font-family="Georgia, serif" font-size="10"
+        fill="url(#gold)" text-anchor="middle" letter-spacing="3" opacity="0.7">
+    IRAQEE
+  </text>
+
+  <!-- Small decorative dots (cuneiform-inspired) -->
+  <circle cx="58" cy="58" r="2" fill="#D4A843" opacity="0.4"/>
+  <circle cx="142" cy="58" r="2" fill="#D4A843" opacity="0.4"/>
+  <circle cx="48" cy="132" r="1.5" fill="#D4A843" opacity="0.3"/>
+  <circle cx="152" cy="132" r="1.5" fill="#D4A843" opacity="0.3"/>
+</svg>

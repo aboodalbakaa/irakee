@@ -7,7 +7,8 @@ import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
-import { Save, User, Loader2 } from "lucide-react";
+import { Save, User, Loader2, Camera } from "lucide-react";
+import { AvatarUpload } from "@/components/profile/AvatarUpload";
 
 export default function DashboardPage() {
   const t = useTranslations("dashboard");
@@ -134,6 +135,19 @@ export default function DashboardPage() {
             {message.text}
           </div>
         )}
+
+        {/* Avatar Upload */}
+        <Card className="mb-6 border-iraq-gold/20 card-premium">
+          <CardHeader>
+            <CardTitle className="text-iraq-navy flex items-center gap-2">
+              <Camera className="h-5 w-5 text-iraq-gold" />
+              Profile Picture
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <AvatarUpload userId={session?.user?.id || ""} />
+          </CardContent>
+        </Card>
 
         {/* Profile Form */}
         <Card className="border-iraq-gold/20 card-premium">

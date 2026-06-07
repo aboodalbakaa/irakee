@@ -62,6 +62,10 @@ export const routing = defineRouting({
       en: "/inbox/[id]",
       ar: "/الرسائل/[id]",
     },
+    "/map": {
+      en: "/map",
+      ar: "/خريطة",
+    },
   },
 });
 
