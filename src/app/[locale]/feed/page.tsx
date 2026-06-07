@@ -58,10 +58,7 @@ export default function FeedPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ content }),
     });
-    if (!res.ok) {
-      const data = await res.json();
-      throw new Error(data.error || "Failed to create post");
-    }
+    if (!res.ok) throw new Error("Failed to create post");
     const newPost = await res.json();
     setPosts((prev) => [newPost, ...prev]);
   };
@@ -103,6 +100,11 @@ export default function FeedPage() {
     const res = await fetch(`/api/posts/${postId}`, { method: "DELETE" });
     if (!res.ok) return;
     setPosts((prev) => prev.filter((p) => p.id !== postId));
+  };
+
+  // Called by PostComposer after it creates a post (with or without media)
+  const handlePostCreated = () => {
+    fetchPosts(feedType);
   };
 
   if (status === "loading") {
@@ -151,7 +153,6 @@ export default function FeedPage() {
               >
                 <Globe className="h-4 w-4" />
                 Global
-                <span className="hidden sm:inline">Feed</span>
               </button>
               <button
                 onClick={() => setFeedType("following")}
@@ -176,7 +177,10 @@ export default function FeedPage() {
             {/* Post composer */}
             {isAuthenticated ? (
               <div className="mb-5">
-                <PostComposer onSubmit={handleCreatePost} userInitial={getInitials(userName)} />
+                <PostComposer
+                  onPostCreated={() => fetchPosts(feedType)}
+                  userInitial={getInitials(userName)}
+                />
               </div>
             ) : (
               <div className="mb-5 rounded-2xl border border-iraq-sand/30 bg-white p-6 text-center shadow-sm">
@@ -216,16 +220,16 @@ export default function FeedPage() {
                 <h3 className="text-lg font-semibold text-iraq-navy">No posts yet</h3>
                 <p className="mt-1 text-sm text-iraq-stone max-w-sm mx-auto">
                   {feedType === "following"
-                    ? "Follow some people to see their posts here. Check the Directory to find interesting people!"
-                    : "Be the first to share something with the community. Your post could inspire someone."}
+                    ? "You're not following anyone yet. Visit the Directory to find people from your city or profession."
+                    : "Be the first to share something with the community."}
                 </p>
-                {feedType === "following" && (
+                {feedType === "following" ? (
                   <Link href="/directory">
-                    <Button variant="secondary" size="sm" className="mt-4">
-                      Browse Directory
-                    </Button>
+                    <Button variant="secondary" size="sm" className="mt-4">Browse Directory</Button>
                   </Link>
-                )}
+                ) : isAuthenticated ? (
+                  <p className="mt-2 text-xs text-iraq-stone">Start typing above to share your first post ✍️</p>
+                ) : null}
               </div>
             ) : (
               <div className="space-y-4">
@@ -256,8 +260,8 @@ export default function FeedPage() {
                   <div className="space-y-3">
                     {suggestedUsers.map((user: any, i: number) => (
                       <Link
-                        key={user.id || i}
-                        href={`/profile/${user.userId || user.id}`}
+                        key={user.userId || i}
+                        href={`/profile/${user.userId}`}
                         className="flex items-center gap-3 group"
                       >
                         <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${avatarColors[i % avatarColors.length]} text-white text-[10px] font-bold`}>
