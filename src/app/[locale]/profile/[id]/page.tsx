@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { MapPin, Globe, Calendar, Star, Mail } from "lucide-react";
-import { Link } from "@/i18n/routing";
+import { MapPin, Globe, Calendar, Star } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { ReviewForm } from "@/components/ui/ReviewForm";
+import { ProfileActions } from "@/components/profile/ProfileActions";
 import { prisma } from "@/lib/db";
 
 type Props = {
@@ -161,13 +163,8 @@ export default async function ProfilePage({ params }: Props) {
                     </span>
                   )}
                 </div>
-                <div className="mt-6 flex gap-3">
-                  <Link href="/auth">
-                    <Button variant="primary">
-                      <Mail className="h-4 w-4" />
-                      {t("contact")}
-                    </Button>
-                  </Link>
+                <div className="mt-6">
+                  <ProfileActions profileUserId={profile.id} profileName={profile.name} />
                 </div>
               </div>
             </div>
@@ -244,6 +241,9 @@ export default async function ProfilePage({ params }: Props) {
           </CardContent>
         </Card>
       </div>
+
+      {/* Write a Review */}
+      <ReviewForm targetId={profile.id} />
     </div>
   );
 }

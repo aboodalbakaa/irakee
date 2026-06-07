@@ -72,6 +72,17 @@ model User {
   purchases Transaction[]   @relation("Buyer")
   sales     Transaction[]   @relation("Seller")
 
+  // Social
+  posts              Post[]
+  postLikes          PostLike[]
+  postComments       PostComment[]
+  followers          Follow[]             @relation("FollowFollowing")
+  following          Follow[]             @relation("FollowFollower")
+  notifications      Notification[]
+  actedNotifications Notification[]       @relation("NotificationActor")
+  conversations      ConversationParticipant[]
+  sentMessages       Message[]
+
   @@map("users")
 }
 
@@ -183,4 +194,119 @@ model Transaction {
   seller  User    @relation("Seller", fields: [sellerId], references: [id], onDelete: Cascade)
 
   @@map("transactions")
+}
+
+// ─── Social / Feed Models ───
+
+model Post {
+  id        String   @id @default(cuid())
+  authorId  String   @map("author_id")
+  content   String   @db.Text
+  media     String[] @default([])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  author   User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  likes    PostLike[]
+  comments PostComment[]
+  notifications Notification[]
+
+  @@map("posts")
+}
+
+model PostLike {
+  id        String   @id @default(cuid())
+  postId    String   @map("post_id")
+  userId    String   @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@map("post_likes")
+}
+
+model PostComment {
+  id        String   @id @default(cuid())
+  postId    String   @map("post_id")
+  authorId  String   @map("author_id")
+  content   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author User @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@map("post_comments")
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String   @map("follower_id")
+  followingId String   @map("following_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  follower  User @relation("FollowFollower", fields: [followerId], references: [id], onDelete: Cascade)
+  following User @relation("FollowFollowing", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+  @@map("follows")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  type      String   // "follow" | "like" | "comment" | "message"
+  actorId   String   @map("actor_id")
+  postId    String?  @map("post_id")
+  messageId String?  @map("message_id")
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  actor   User  @relation("NotificationActor", fields: [actorId], references: [id], onDelete: Cascade)
+  post    Post? @relation(fields: [postId], references: [id], onDelete: SetNull)
+  message Message? @relation(fields: [messageId], references: [id], onDelete: SetNull)
+
+  @@map("notifications")
+}
+
+// ─── Messaging Models ───
+
+model Conversation {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  conversationId String @map("conversation_id")
+  userId         String @map("user_id")
+  lastReadAt     DateTime? @map("last_read_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([conversationId, userId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String    @id @default(cuid())
+  conversationId String    @map("conversation_id")
+  senderId       String    @map("sender_id")
+  content        String    @db.Text
+  createdAt      DateTime  @default(now()) @map("created_at")
+  readAt         DateTime? @map("read_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  notifications Notification[]
+
+  @@map("messages")
 }

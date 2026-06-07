@@ -12,9 +12,11 @@ npm install
 
 # Set up environment
 cp .env.example .env.local
+# Edit .env.local with your DATABASE_URL, AUTH_SECRET, AUTH_GOOGLE_ID, AUTH_GOOGLE_SECRET
 
-# Run the Supabase migration
-npx supabase migration up
+# Generate Prisma client and run migrations
+npx prisma generate
+npx prisma db push
 
 # Start development
 npm run dev
@@ -25,11 +27,11 @@ npm run dev
 | Layer | Technology |
 |-------|-----------|
 | **Frontend** | Next.js 16 (App Router, Server Components) |
-| **Backend** | Next.js API Routes + Supabase |
-| **Database** | Supabase PostgreSQL (RLS-enabled) |
-| **Auth** | Supabase Auth (Google OAuth + Email) |
+| **Backend** | Next.js API Routes + Prisma ORM |
+| **Database** | PostgreSQL (direct, via Prisma) |
+| **Auth** | NextAuth v5 (Google OAuth + Email/Credentials) |
 | **i18n** | next-intl (EN/AR, RTL support) |
-| **Deploy** | Vercel (recommended) |
+| **Deploy** | VPS (systemd service + Caddy reverse proxy) |
 
 ## 📁 Project Structure
 
@@ -54,9 +56,10 @@ messages/              ← en.json + ar.json (all strings translated)
 
 ## 🗺️ Roadmap
 
-- **Phase 1** (4 weeks): Instagram presence + simple web directory
-- **Phase 2** (+6 weeks): Full platform (profiles, advanced search, events)
-- **Phase 3** (+12 weeks): Mediation, escrow, verification system
+- **Phase 1** (current): VPS deployment with Caddy + systemd. Working directory, auth, i18n.
+- **Phase 2** (+4 weeks): Instagram presence + member onboarding. Profile creation, directory growth.
+- **Phase 3** (+8 weeks): Marketplace (listings, transactions, reviews), events system.
+- **Phase 4** (+16 weeks): Mediation, escrow, verification system.
 
 ## 🧩 Key Features
 
@@ -71,13 +74,34 @@ messages/              ← en.json + ar.json (all strings translated)
 
 This is a non-profit community project. Contributions welcome — especially from Iraqi diaspora members, developers, and community organizers.
 
-## 📦 Deploy to Vercel
+## 📦 Deployment
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/aboodalbakaa/iraqee)
+The site is currently deployed on a **VPS** via systemd + Caddy reverse proxy.
+
+### VPS setup
+```bash
+# Start/stop/restart
+sudo systemctl start irakee
+sudo systemctl stop irakee
+sudo systemctl restart irakee
+
+# Check status
+sudo systemctl status irakee
+
+# View logs
+journalctl -u irakee -n 100 -f
+```
+
+### Vercel (optional)
+If you want better global performance + HTTPS domain later:
+1. Push to GitHub
+2. Link repo to Vercel
+3. Add env vars: `DATABASE_URL`, `AUTH_SECRET`, `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`
 
 Required environment variables:
-- `NEXT_PUBLIC_SUPABASE_URL` — your Supabase project URL
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` — your Supabase anon/public key
+- `DATABASE_URL` — PostgreSQL connection string
+- `AUTH_SECRET` — NextAuth secret (generate with `npx auth secret`)
+- `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` — Google OAuth credentials
 
 ## 📄 License
 

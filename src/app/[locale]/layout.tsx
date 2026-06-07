@@ -5,6 +5,8 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
 import "@/app/globals.css";
 
 type Props = {
@@ -39,15 +41,18 @@ export default async function LocaleLayout({ children, params }: Props) {
 
   const messages = await getMessages();
   const isRtl = locale === "ar";
+  const session = await auth();
 
   return (
     <html lang={locale} dir={isRtl ? "rtl" : "ltr"} className="h-full">
       <body className="min-h-full flex flex-col">
-        <NextIntlClientProvider messages={messages}>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </NextIntlClientProvider>
+        <SessionProvider session={session}>
+          <NextIntlClientProvider messages={messages}>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </NextIntlClientProvider>
+        </SessionProvider>
       </body>
     </html>
   );

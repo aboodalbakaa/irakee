@@ -49,6 +49,22 @@ export function Footer() {
               </li>
               <li>
                 <Link
+                  href={`/${locale}/events`}
+                  className="text-sm text-iraq-cream/60 hover:text-iraq-gold transition-colors"
+                >
+                  Events
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/listings`}
+                  className="text-sm text-iraq-cream/60 hover:text-iraq-gold transition-colors"
+                >
+                  Listings
+                </Link>
+              </li>
+              <li>
+                <Link
                   href={`/${locale}/about`}
                   className="text-sm text-iraq-cream/60 hover:text-iraq-gold transition-colors"
                 >
