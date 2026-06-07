@@ -1,19 +1,23 @@
-/* Iraqee Platform — Iraqi-inspired Design System */
+/* Iraqee Platform — Iraqi-inspired Design System v2 */
 @import "tailwindcss";
 
 /* ─── Brand Design Tokens ─── */
 @theme inline {
-  /* Iraqi-inspired palette */
+  /* Deeper, richer palette */
   --color-iraq-navy: #0C1B33;
   --color-iraq-navy-light: #1A2D4A;
-  --color-iraq-gold: #C9A84C;
-  --color-iraq-gold-light: #E8D48B;
-  --color-iraq-gold-dark: #A8872E;
+  --color-iraq-navy-dark: #070F1E;
+  --color-iraq-gold: #D4A843;
+  --color-iraq-gold-light: #F0E0A0;
+  --color-iraq-gold-dark: #B8922E;
   --color-iraq-red: #CE1126;
   --color-iraq-green: #007A3D;
-  --color-iraq-cream: #F8F5F0;
+  --color-iraq-cream: #FAF7F2;
   --color-iraq-warm: #EDE7D9;
   --color-iraq-stone: #8B8170;
+  --color-iraq-charcoal: #2C2C3A;
+  --color-iraq-sand: #D4C9B0;
+  --color-iraq-amber: #F59E0B;
 
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Playfair Display", "Georgia", serif;
@@ -29,7 +33,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
+  background-color: #FAF7F2;
   color: #1A1A2E;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -38,21 +42,21 @@ body {
 /* ─── RTL Support ─── */
 [dir="rtl"] { text-align: right; }
 
-/* ─── Pattern Background ─── */
+/* ─── Mesopotamian Pattern (subtler, layered) ─── */
 .mesopotamian-pattern {
   background-image:
-    radial-gradient(ellipse at 20% 50%, rgba(201, 168, 76, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 20%, rgba(12, 27, 51, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 80%, rgba(201, 168, 76, 0.05) 0%, transparent 50%);
+    radial-gradient(ellipse at 15% 30%, rgba(212, 168, 67, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 20%, rgba(12, 27, 51, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 85%, rgba(212, 168, 67, 0.05) 0%, transparent 50%);
 }
 
-/* ─── Premium hover effects ─── */
+/* ─── Premium card hover ─── */
 .card-premium {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s ease, border-color 0.2s ease;
 }
 .card-premium:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 40px rgba(12, 27, 51, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(12, 27, 51, 0.08);
 }
 
 /* ─── Gold accent underline ─── */
@@ -78,10 +82,101 @@ body {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
 .line-clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* ─── Heart like animation ─── */
+@keyframes heart-pop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.4); }
+  50% { transform: scale(0.9); }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+.heart-animate {
+  animation: heart-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ─── Post entry animation ─── */
+@keyframes slide-up-fade {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.post-enter {
+  animation: slide-up-fade 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.post-enter:nth-child(1) { animation-delay: 0s; }
+.post-enter:nth-child(2) { animation-delay: 0.05s; }
+.post-enter:nth-child(3) { animation-delay: 0.1s; }
+.post-enter:nth-child(4) { animation-delay: 0.15s; }
+.post-enter:nth-child(5) { animation-delay: 0.2s; }
+
+/* ─── Comment slide-in ─── */
+@keyframes comment-slide {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.comment-enter {
+  animation: comment-slide 0.2s ease both;
+}
+
+/* ─── Badge pulse for notifications ─── */
+@keyframes badge-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+.badge-pulse {
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+
+/* ─── Gradient text ─── */
+.gradient-gold {
+  background: linear-gradient(135deg, var(--color-iraq-gold), var(--color-iraq-gold-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Avatar glow ring ─── */
+.avatar-ring {
+  box-shadow: 0 0 0 2px white, 0 0 0 4px rgba(212, 168, 67, 0.3);
+}
+
+/* ─── Tab underline animation ─── */
+.tab-indicator {
+  position: relative;
+}
+.tab-indicator::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-iraq-gold);
+  border-radius: 2px;
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+.tab-indicator.active::after {
+  transform: scaleX(1);
+}
+
+/* ─── Fade in ─── */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.fade-in {
+  animation: fade-in 0.25s ease both;
 }
