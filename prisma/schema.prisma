@@ -100,6 +100,9 @@ model Profile {
   verificationStatus String   @default("unverified") @map("verification_status") // "unverified" | "verified" | "premium"
   phone              String?
   avatarUrl          String?  @map("avatar_url")
+  coverUrl           String?  @map("cover_url")
+  governorate        String?
+  interests          String[] @default([])
   latitude           Float?   @map("latitude")
   longitude          Float?   @map("longitude")
   createdAt          DateTime @default(now()) @map("created_at")

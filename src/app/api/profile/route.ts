@@ -44,7 +44,7 @@ export async function PUT(req: NextRequest) {
 
   try {
     const body = await req.json();
-    const { displayName, bio, profession, industry, city, country, languages, phone, diasporaStatus } = body;
+    const { displayName, bio, profession, industry, city, country, languages, phone, diasporaStatus, governorate, interests } = body;
 
     const profile = await prisma.profile.update({
       where: { userId: session.user.id },
@@ -58,6 +58,8 @@ export async function PUT(req: NextRequest) {
         ...(languages !== undefined && { languages: typeof languages === "string" ? languages.split(",").map((l: string) => l.trim()).filter(Boolean) : languages }),
         ...(phone !== undefined && { phone }),
         ...(diasporaStatus !== undefined && { diasporaStatus }),
+        ...(governorate !== undefined && { governorate }),
+        ...(interests !== undefined && { interests: typeof interests === "string" ? interests.split(",").map((l: string) => l.trim()).filter(Boolean) : interests }),
       },
     });
 

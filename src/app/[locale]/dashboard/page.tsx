@@ -7,8 +7,9 @@ import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/Card";
-import { Save, User, Loader2, Camera } from "lucide-react";
+import { Save, User, Loader2, Camera, ImageIcon } from "lucide-react";
 import { AvatarUpload } from "@/components/profile/AvatarUpload";
+import { CoverUpload } from "@/components/profile/CoverUpload";
 
 export default function DashboardPage() {
   const t = useTranslations("dashboard");
@@ -22,6 +23,9 @@ export default function DashboardPage() {
   const [languages, setLanguages] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [diasporaStatus, setDiasporaStatus] = React.useState("first_gen");
+  const [governorate, setGovernorate] = React.useState("");
+  const [interests, setInterests] = React.useState("");
+  const [coverUrl, setCoverUrl] = React.useState("");
   const [saving, setSaving] = React.useState(false);
   const [message, setMessage] = React.useState<{ type: "success" | "error"; text: string } | null>(null);
   const [loading, setLoading] = React.useState(true);
@@ -40,6 +44,9 @@ export default function DashboardPage() {
           setLanguages((data.languages ?? []).join(", "));
           setPhone(data.phone ?? "");
           setDiasporaStatus(data.diasporaStatus ?? "first_gen");
+          setGovernorate(data.governorate ?? "");
+          setInterests((data.interests ?? []).join(", "));
+          setCoverUrl(data.coverUrl ?? "");
         })
         .catch(console.error)
         .finally(() => setLoading(false));
@@ -66,6 +73,8 @@ export default function DashboardPage() {
           languages,
           phone,
           diasporaStatus,
+          governorate,
+          interests,
         }),
       });
 
@@ -146,6 +155,19 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <AvatarUpload userId={session?.user?.id || ""} />
+          </CardContent>
+        </Card>
+
+        {/* Cover Upload */}
+        <Card className="mb-6 border-iraq-gold/20 card-premium">
+          <CardHeader>
+            <CardTitle className="text-iraq-navy flex items-center gap-2">
+              <ImageIcon className="h-5 w-5 text-iraq-gold" />
+              Cover Photo
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CoverUpload />
           </CardContent>
         </Card>
 
@@ -235,6 +257,34 @@ export default function DashboardPage() {
                   <option value="second_gen">{t("secondGen")}</option>
                   <option value="friend_of_iraq">{t("friendOfIraq")}</option>
                 </select>
+              </div>
+
+              <div className="grid gap-5 sm:grid-cols-2">
+                <div>
+                  <label className="block text-sm font-medium text-stone-700 mb-1">
+                    Governorate (Iraq)
+                  </label>
+                  <select
+                    value={governorate}
+                    onChange={(e) => setGovernorate(e.target.value)}
+                    className="h-11 w-full rounded-lg border border-stone-200 bg-white px-4 text-sm text-stone-700 focus:outline-none focus:ring-2 focus:ring-iraq-gold"
+                  >
+                    <option value="">Select governorate...</option>
+                    {["Baghdad", "Basra", "Erbil", "Sulaymaniyah", "Duhok", "Mosul", "Kirkuk", "Najaf", "Karbala", "Hillah", "Diwaniyah", "Nasiriyah", "Amarah", "Samawah", "Fallujah", "Ramadi", "Tikrit", "Baqubah", "Kut", "Zakho"].map(g => (
+                      <option key={g} value={g}>{g}</option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-stone-700 mb-1">
+                    Interests
+                  </label>
+                  <Input
+                    value={interests}
+                    onChange={(e) => setInterests(e.target.value)}
+                    placeholder="Tech, Food, Travel, Music..."
+                  />
+                </div>
               </div>
 
               <div>
